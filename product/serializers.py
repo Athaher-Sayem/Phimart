@@ -54,10 +54,10 @@ class ProductSerializer(serializers.ModelSerializer):
                   'stock', 'category', 'price_with_tax']
         
 
-    category = serializers.HyperlinkedRelatedField(
-            queryset=Category.objects.all(),
-            view_name='view-specific-category'
-         )
+    # category = serializers.HyperlinkedRelatedField(
+    #         queryset=Category.objects.all(),
+    #         view_name='view-specific-category'
+    #      )
 
     price_with_tax= serializers.SerializerMethodField(method_name='calculate_tax')
     def calculate_tax(self,product):
