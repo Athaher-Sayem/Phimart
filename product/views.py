@@ -6,4 +6,4 @@ from rest_framework.decorators import api_view
 
 @api_view()
 def view_product(request):
-    return Response('Okey')
+    return Response({'message':'Okey'})
