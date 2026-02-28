@@ -51,7 +51,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'name', 'description', 'price',
-                  'stock', 'category', 'price_with_tax']
+                  'stock', 'category', 'price_with_tax']  #other 
         
 
     # category = serializers.HyperlinkedRelatedField(
@@ -67,3 +67,9 @@ class ProductSerializer(serializers.ModelSerializer):
         if price < 0:
             raise serializers.ValidationError('Price could not be negative')
         return price
+    
+    def create(self, validated_data):
+        product = Product(**validated_data)
+        product.other = 1
+        product.save()
+        return product

@@ -30,11 +30,23 @@ def view_products(request):
         #           return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view()
+@api_view(['GET','PUT','DELETE'])
 def view_specific_product(request,id):
-        product = get_object_or_404(Product,pk=id)
-        serializer = ProductSerializer(product)
-        return Response(serializer.data)
+        if request.method == 'GET':
+              product = get_object_or_404(Product,pk=id)
+              serializer = ProductSerializer(product)
+              return Response(serializer.data)
+        if request.method == 'PUT':
+              product = get_object_or_404(Product,pk=id)
+              serializer = ProductSerializer(product,data=request.data)
+              serializer.is_valid(raise_exception=True)
+              serializer.save()
+              return Response(serializer.data)
+        if request.method == 'DELETE':
+               product = get_object_or_404(Product,pk=id)
+               product.delete()
+               return Response(status=status.HTTP_204_NO_CONTENT)
+
    
 
 @api_view()
