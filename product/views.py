@@ -12,7 +12,8 @@ from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from product.filters import ProductFilter
 from rest_framework.filters import SearchFilter,OrderingFilter
-
+from rest_framework.pagination import PageNumberPagination
+from product.paginations import DefaultPagiantion
 
 # @api_view(['GET','POST'])
 # def view_products(request):
@@ -54,8 +55,11 @@ class ProductViewSet(ModelViewSet):
       filter_backends=[DjangoFilterBackend,SearchFilter,OrderingFilter]
       # filterset_fields = ['category_id','price']
       filterset_class = ProductFilter
+      # pagination_class = PageNumberPagination
+      pagination_class = DefaultPagiantion
+
       search_fields = ['name','description','category__name']
-      ordering_fields=['price']
+      ordering_fields=['price','updated_at']
 
       # def get_queryset(self):
       #       queryset = Product.objects.all()
