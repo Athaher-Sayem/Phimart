@@ -28,3 +28,18 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    date = models.DateField(auto_now_add=True)
+
+
+
+# #step to build an api
+# 1.ready the model
+# 2.make a serializer 
+# 3. create viewset
+# 4. set routers
