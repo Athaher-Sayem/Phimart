@@ -8,6 +8,7 @@ from product.serializers import ProductSerializer ,CategorySerializer
 from django.db.models import Count
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 
 
 # @api_view(['GET','POST'])
@@ -44,16 +45,27 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 #             serializer.save()
 #             return Response(serializer.data , status=status.HTTP_201_CREATED)                       
 
-
-
-class ProductsList(ListCreateAPIView):
-      # def get_queryset(self):
-      #       return Product.objects.select_related('category').all()
-      # def get_serializer_class(self):
-      #       return ProductSerializer
-      
-      queryset =  Product.objects.select_related('category').all()
+class ProductViewSet(ModelViewSet):
+      queryset = Product.objects.all()
       serializer_class = ProductSerializer
+
+      def delete(self , request,id):
+            product = self.get_object()
+            if product.stock > 10 :
+                  return Response({'Message': "Cant delte this "})
+            self.perform_destroy(product)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+# class ProductsList(ListCreateAPIView):
+#       # def get_queryset(self):
+#       #       return Product.objects.select_related('category').all()
+#       # def get_serializer_class(self):
+#       #       return ProductSerializer
+      
+#       queryset =  Product.objects.all()
+#       serializer_class = ProductSerializer
 
 
 
@@ -97,17 +109,17 @@ class ProductsList(ListCreateAPIView):
 #             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class ProductDetails(RetrieveUpdateDestroyAPIView):
-      queryset = Product.objects.all()
-      serializer_class = ProductSerializer
-      lookup_field = 'id'
+# class ProductDetails(RetrieveUpdateDestroyAPIView):
+#       queryset = Product.objects.all()
+#       serializer_class = ProductSerializer
+#       lookup_field = 'id'
 
-      def delete(self , request,id):
-            product = get_object_or_404(Product,pk=id)
-            if product.stock > 10 :
-                  return Response({'Message': "Cant delte this "})
-            product.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+#       def delete(self , request,id):
+#             product = get_object_or_404(Product,pk=id)
+#             if product.stock > 10 :
+#                   return Response({'Message': "Cant delte this "})
+#             product.delete()
+#             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
@@ -124,16 +136,16 @@ class ProductDetails(RetrieveUpdateDestroyAPIView):
 #     return Response(serializer.data)
 
 
-class ViewCategories(APIView):
-      def get(self , request):
-            categories= Category.objects.annotate(product_count=Count('products')).all()
-            serializer = CategorySerializer(categories,many=True)
-            return Response(serializer.data)
-      def post(self , request):
-            serializer = CategorySerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+# class ViewCategories(APIView):
+#       def get(self , request):
+#             categories= Category.objects.annotate(product_count=Count('products')).all()
+#             serializer = CategorySerializer(categories,many=True)
+#             return Response(serializer.data)
+#       def post(self , request):
+#             serializer = CategorySerializer(data=request.data)
+#             serializer.is_valid(raise_exception=True)
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 # @api_view()
@@ -167,6 +179,12 @@ class ViewCategories(APIView):
       
 
 
-class CategoryDetails(RetrieveUpdateDestroyAPIView):
+# class CategoryDetails(RetrieveUpdateDestroyAPIView):
+#       queryset = Category.objects.annotate(product_count=Count('products')).all()
+#       serializer_class = CategorySerializer
+
+
+
+class CategoryViewSet(ModelViewSet):
       queryset = Category.objects.annotate(product_count=Count('products')).all()
       serializer_class = CategorySerializer
