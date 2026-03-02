@@ -14,6 +14,8 @@ from product.filters import ProductFilter
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from product.paginations import DefaultPagiantion
+from rest_framework.permissions import IsAdminUser,AllowAny
+from api.permissions import IsAdminOrReadOnly
 
 # @api_view(['GET','POST'])
 # def view_products(request):
@@ -60,6 +62,13 @@ class ProductViewSet(ModelViewSet):
 
       search_fields = ['name','description','category__name']
       ordering_fields=['price','updated_at']
+      # permission_classes = [IsAdminUser]
+      permission_classes = [IsAdminOrReadOnly]
+
+      # def get_permissions(self):
+      #       if self.request.method == 'GET':
+      #             return [AllowAny()]
+      #       return [IsAdminUser()]
 
       # def get_queryset(self):
       #       queryset = Product.objects.all()
@@ -206,6 +215,7 @@ class ProductViewSet(ModelViewSet):
 
 
 class CategoryViewSet(ModelViewSet):
+      permission_classes = [IsAdminOrReadOnly]
       queryset = Category.objects.annotate(product_count=Count('products')).all()
       serializer_class = CategorySerializer
 
