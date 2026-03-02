@@ -17,7 +17,7 @@ from product.paginations import DefaultPagiantion
 from rest_framework.permissions import IsAdminUser,AllowAny
 from api.permissions import IsAdminOrReadOnly,FullDjangoModelPermission
 from rest_framework.permissions import DjangoModelPermissions,DjangoModelPermissionsOrAnonReadOnly
-
+from product.permissions import IsReviewAuthorOrReadOnly
 # @api_view(['GET','POST'])
 # def view_products(request):
 #       if request.method == 'GET':
@@ -235,7 +235,12 @@ class ReviewViewSet(ModelViewSet):
       
       serializer_class = ReviewSerializer 
 
+      permission_classes =[IsReviewAuthorOrReadOnly]
+
       def perform_create(self, serializer):
+            serializer.save(user=self.request.user)
+
+      def perform_update(self, serializer):
             serializer.save(user=self.request.user)
 
       def get_serializer_context(self):

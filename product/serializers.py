@@ -92,12 +92,16 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     # user = serializers.CharField(read_only=True)
-    user = SimpleUserSerializer()
+    # user = SimpleUserSerializer()
+    user = serializers.SerializerMethodField(method_name='get_user')
     class Meta:
         model = Review
         fields = ['id','user','product','ratings','comment']
 
         read_only_fields = ['user','product']
+
+    def get_user(self , obj):
+        return SimpleUserSerializer(obj.user).data
 
     def create(self, validated_data ):
         product_id = self.context['product_id']
