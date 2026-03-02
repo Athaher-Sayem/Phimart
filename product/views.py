@@ -64,9 +64,9 @@ class ProductViewSet(ModelViewSet):
       search_fields = ['name','description','category__name']
       ordering_fields=['price','updated_at']
       # permission_classes = [IsAdminUser]
-      # permission_classes = [IsAdminOrReadOnly]
-      permission_classes = [DjangoModelPermissions]
-      permission_classes = [FullDjangoModelPermission]
+      permission_classes = [IsAdminOrReadOnly]
+      # permission_classes = [DjangoModelPermissions]
+      # permission_classes = [FullDjangoModelPermission]
       # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
 
       # def get_permissions(self):
