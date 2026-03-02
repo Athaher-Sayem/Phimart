@@ -133,6 +133,9 @@ REST_FRAMEWORK ={
         'rest_framework_simplejwt.authentication.JWTAuthentication',
        
     ),
+     'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 
@@ -144,5 +147,6 @@ SIMPLE_JWT = {
 DJOSER = {
     'SERIALIZERS': {
         'user_create': 'users.serializers.UserCreateSerializer',
+        'current_user':'users.serializers.UserSerializer'
     },
 }
