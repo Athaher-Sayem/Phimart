@@ -16,6 +16,7 @@ from rest_framework.pagination import PageNumberPagination
 from product.paginations import DefaultPagiantion
 from rest_framework.permissions import IsAdminUser,AllowAny
 from api.permissions import IsAdminOrReadOnly
+from rest_framework.permissions import DjangoModelPermissions
 
 # @api_view(['GET','POST'])
 # def view_products(request):
@@ -63,7 +64,8 @@ class ProductViewSet(ModelViewSet):
       search_fields = ['name','description','category__name']
       ordering_fields=['price','updated_at']
       # permission_classes = [IsAdminUser]
-      permission_classes = [IsAdminOrReadOnly]
+      # permission_classes = [IsAdminOrReadOnly]
+      permission_classes = [DjangoModelPermissions]
 
       # def get_permissions(self):
       #       if self.request.method == 'GET':
