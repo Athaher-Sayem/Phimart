@@ -235,5 +235,8 @@ class ReviewViewSet(ModelViewSet):
       
       serializer_class = ReviewSerializer 
 
+      def perform_create(self, serializer):
+            serializer.save(user=self.request.user)
+
       def get_serializer_context(self):
             return {'product_id':self.kwargs['product_pk']}
