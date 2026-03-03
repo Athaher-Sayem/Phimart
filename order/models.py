@@ -42,6 +42,7 @@ class Order(models.Model):
         (DELIVERED, 'Delivered'),
         (CANCLED, 'Cancled')
     ]
+    id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="orders")
     status = models.CharField(
