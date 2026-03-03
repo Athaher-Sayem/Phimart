@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from order.models import Cart, CartItem
+from order.models import Cart, CartItem , Order,OrderItem
 from product.serializers import ProductSerializer
 from product.models import Product
 
@@ -72,3 +72,9 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
     class Meta :
         model = CartItem
         fields = ['quantity']
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = Order
+        fields = ['id', 'user','status','total_price','created_at','items']

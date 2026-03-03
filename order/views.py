@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from order.serializers import CartSerializer,CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer
+from order.serializers import CartSerializer,CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer,OrderSerializer
 from rest_framework.viewsets import GenericViewSet,ModelViewSet
-from order.models import Cart,CartItem
+from order.models import Cart,CartItem,Order,OrderItem
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
@@ -34,3 +34,8 @@ class CartitemViewSet(ModelViewSet):
 
     def get_queryset(self):
         return CartItem.objects.filter(cart_id=self.kwargs['cart_pk'])
+    
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
