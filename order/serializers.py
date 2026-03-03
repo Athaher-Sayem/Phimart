@@ -74,7 +74,14 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
         fields = ['quantity']
 
 
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = SimpleProductSerializer()
+    class Meta :
+        model = OrderItem
+        fields = ['id','product','quantity','total_price']
+
 class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
     class Meta :
         model = Order
         fields = ['id', 'user','status','total_price','created_at','items']

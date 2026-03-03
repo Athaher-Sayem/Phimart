@@ -15,7 +15,7 @@ class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin,GenericV
     permission_classes =[IsAuthenticated]
 
     def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
+        return Cart.objects.prefetch_related('items__product').filter(user=self.request.user)
 
 
 class CartitemViewSet(ModelViewSet):
@@ -37,6 +37,11 @@ class CartitemViewSet(ModelViewSet):
     
 
 class OrderViewSet(ModelViewSet):
-    queryset = Order.objects.all()
+    # queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Order.objects.prefetch_related('items__product').all()
+        return Order.objects.prefetch_related('items__product').filter(user=self.request.user)
