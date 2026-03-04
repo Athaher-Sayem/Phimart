@@ -1,9 +1,11 @@
 from order.models import Order,OrderItem,Cart,CartItem
+from django.db import transaction
 
 class OrderService:
     @staticmethod
     def create_order(user_id , cart_id):
-
+        
+        with transaction.Atomic():
             cart = Cart.objects.get(pk=cart_id)
             cart_items = cart.items.select_related('product').all()
 
