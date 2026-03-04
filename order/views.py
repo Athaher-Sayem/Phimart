@@ -45,7 +45,7 @@ class OrderViewSet(ModelViewSet):
     # permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
-        if self.request.method in ['PATCH' , 'DELETE']:
+        if self.request.method == 'DELETE':
             return [IsAdminUser()]
         return [IsAuthenticated()]
 
@@ -58,7 +58,7 @@ class OrderViewSet(ModelViewSet):
             return UpdateOrderSerializer
         return OrderSerializer
     def get_serializer_context(self):
-        return {'user_id': self.request.user.id}
+        return {'user_id': self.request.user.id , 'user': self.request.user}
 
     def get_queryset(self):
         if self.request.user.is_staff:

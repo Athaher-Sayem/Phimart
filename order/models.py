@@ -34,7 +34,7 @@ class Order(models.Model):
     READY_TO_SHIP = 'Ready To Ship'
     SHIPPED = 'Shipped'
     DELIVERED = 'Delivered'
-    CANCLED = 'Cancled'
+    CANCLED = 'Canceled'
     STATUS_CHOICES = [
         (NOT_PAID, 'Pending'),
         (READY_TO_SHIP, 'Ready To Ship'),
