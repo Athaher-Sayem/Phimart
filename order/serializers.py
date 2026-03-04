@@ -84,7 +84,40 @@ class CreateOrderSerializer(serializers.Serializer):
         if not CartItem.objects.filter(cart_id=cart_id).exists():
             raise serializers.ValidationError("Cart is empty")
         return cart_id
+    
+    def create(self, validated_data):
+        user_id = self.context['user_id']
+        cart_id = self.validated_data['cart_id']
 
+        cart = Cart.objects.get(pk=cart_id)
+        cart_items = cart.items.select_related('product').all()
+
+        # print(user_id)
+        # print(cart_id)
+
+        total_price = sum([item.product.price * item.quantity for item in cart_items])
+
+        order = Order.objects.create(user_id=user_id, total_price=total_price)
+
+        order_items=[
+            OrderItem(  
+                order=order,
+                product=item.product,
+                price=item.product.price,
+                quantity=item.quantity,
+                total_price = item.product.price * item.quantity
+            )
+            for item in cart_items
+        ]
+
+        OrderItem.objects.bulk_create(order_items)
+
+        cart.delete()
+        return order
+    
+    def to_representation(self, instance):
+        return OrderSerializer(instance).data
+        
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product = SimpleProductSerializer()
