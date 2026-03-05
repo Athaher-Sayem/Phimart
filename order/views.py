@@ -1,9 +1,12 @@
 from django.shortcuts import render
-from order.serializers import CartSerializer,CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer,OrderSerializer,CreateOrderSerializer , UpdateOrderSerializer
+from order.serializers import CartSerializer,CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer,OrderSerializer,CreateOrderSerializer , UpdateOrderSerializer,EmptySerializer
 from rest_framework.viewsets import GenericViewSet,ModelViewSet
 from order.models import Cart,CartItem,Order,OrderItem
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from order.services import OrderService
 # Create your views here.
 
 
@@ -51,7 +54,17 @@ class OrderViewSet(ModelViewSet):
 
     http_method_names = ['get','post','patch','delete','head','options']
 
+    @action(detail=True  , methods=['post'] , permission_classes=[IsAuthenticated])
+    def cancel(self , request , pk=None):
+        order =  self.get_object()
+        OrderService.cancel_order(order=order , user=request.user)
+        return Response({'Status':"Order Canceled"})
+
+
+
     def get_serializer_class(self):
+        if self.action == 'cancel':
+            return EmptySerializer
         if self.request.method == 'POST':
             return CreateOrderSerializer
         elif self.request.method == 'PATCH':
