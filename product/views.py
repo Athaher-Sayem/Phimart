@@ -2,9 +2,9 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from product.models import Product,Category,Review
+from product.models import Product,Category,Review,ProductImage
 from rest_framework import status
-from product.serializers import ProductSerializer ,CategorySerializer,ReviewSerializer
+from product.serializers import ProductSerializer ,CategorySerializer,ReviewSerializer,ProductImageSerializer
 from django.db.models import Count
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
@@ -245,3 +245,17 @@ class ReviewViewSet(ModelViewSet):
 
       def get_serializer_context(self):
             return {'product_id':self.kwargs['product_pk']}
+      
+
+
+
+class ProductImageViewSet(ModelViewSet):
+      # queryset = ProductImage.objects.all()
+
+      serializer_class = ProductImageSerializer
+
+      def perform_create(self, serializer):
+            serializer.save(product_id = self.kwargs['product_pk'])
+
+      def get_queryset(self):
+            return ProductImage.objects.filter(product_id = self.kwargs['product_pk'])
