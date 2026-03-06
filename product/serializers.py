@@ -49,11 +49,17 @@ class CategorySerializer(serializers.ModelSerializer):
 #         return round(product.price* Decimal(1.1),2)
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id','image']
+
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True , read_only = True)
     class Meta:
         model = Product
         fields = ['id', 'name', 'description', 'price',
-                  'stock', 'category', 'price_with_tax']  #other 
+                  'stock', 'category', 'price_with_tax' , 'images']  #other 
         
 
     # category = serializers.HyperlinkedRelatedField(
@@ -109,9 +115,3 @@ class ReviewSerializer(serializers.ModelSerializer):
         review = Review.objects.create(product_id=product_id,**validated_data)
         return review
 
-
-
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = ['id','image']
