@@ -18,6 +18,11 @@ from rest_framework.permissions import IsAdminUser,AllowAny
 from api.permissions import IsAdminOrReadOnly,FullDjangoModelPermission
 from rest_framework.permissions import DjangoModelPermissions,DjangoModelPermissionsOrAnonReadOnly
 from product.permissions import IsReviewAuthorOrReadOnly
+from drf_yasg.utils import swagger_auto_schema
+
+
+
+
 # @api_view(['GET','POST'])
 # def view_products(request):
 #       if request.method == 'GET':
@@ -53,6 +58,15 @@ from product.permissions import IsReviewAuthorOrReadOnly
 #             return Response(serializer.data , status=status.HTTP_201_CREATED)                       
 
 class ProductViewSet(ModelViewSet):
+      """
+            API endpoint for managing products in the e-commerce store
+            - Allows authenticated admin to create, update, and delete products
+            - Allows users to browse and filter product
+            - Support searching by name, description, and category
+            - Support ordering by price and updated_at
+      """
+
+      
       queryset = Product.objects.all()
       serializer_class = ProductSerializer
       filter_backends=[DjangoFilterBackend,SearchFilter,OrderingFilter]
@@ -88,6 +102,28 @@ class ProductViewSet(ModelViewSet):
                   return Response({'Message': "Cant delte this "})
             self.perform_destroy(product)
             return Response(status=status.HTTP_204_NO_CONTENT)
+     
+     
+      @swagger_auto_schema(
+        operation_summary='Retrive a list of products')
+      def list(self, request, *args, **kwargs):
+        """Retrive all the products"""
+        return super().list(request, *args, **kwargs)
+      
+
+
+      @swagger_auto_schema(
+        operation_summary="Create a product by admin",
+        operation_description="This allow an admin to create a product",
+        request_body=ProductSerializer,
+        responses={
+            201: ProductSerializer,
+            400: "Bad Request"
+        }
+        )
+      def create(self, request, *args, **kwargs):
+        """Only authenticated admin can create product"""
+        return super().create(request, *args, **kwargs)
 
 
 
