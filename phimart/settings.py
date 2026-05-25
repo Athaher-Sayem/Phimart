@@ -80,8 +80,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "phimart.wsgi.app"
-
+# WSGI_APPLICATION = "phimart.wsgi.app"
+WSGI_APPLICATION = "phimart.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
